@@ -1,4 +1,4 @@
-""" This implementation based on naive tensorflow framework
+""" This implementation based on the naive tensorflow framework
 Inception-v1 Inflated 3D ConvNet used for Kinetics CVPR paper.
 The model is introduced in:
   Quo Vadis, Action Recognition? A New Model and the Kinetics Dataset
