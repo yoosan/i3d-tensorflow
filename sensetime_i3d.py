@@ -22,6 +22,7 @@ def unit3D(inputs, output_channels,
            padding='same',
            is_training=True,
            name=None):
+    
     """Basic unit containing Conv3D + BatchNorm + non-linearity."""
     net = tf.layers.conv3d(inputs, filters=output_channels,
                            kernel_size=kernel_shape,
@@ -37,6 +38,7 @@ def unit3D(inputs, output_channels,
 
 
 def SenseTime_I3D(inputs, is_training=True,
+                    
 				  final_endpoint='Prediction',
 				  data_format='NHWC',
 				  dropout_keep_prob=0.5,
