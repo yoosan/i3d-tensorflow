@@ -1,0 +1,6 @@
+# top-most EditorConfig file
+
+# all files
+[*]
+indent_style = spaces
+indent_size = 2
