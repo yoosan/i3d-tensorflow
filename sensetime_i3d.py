@@ -11,39 +11,16 @@ from __future__ import division
 from __future__ import print_function
 
 import tensorflow as tf
-
-
-def unit3D(inputs, output_channels,
-	kernel_shape=(1, 1, 1),
-	strides=(1, 1, 1),
-	activation_fn=tf.nn.relu,
-	use_batch_norm=True, 
-	use_bias=False,
-	padding='same',
-	is_training=True, 
-	name=None):
-    """Basic unit containing Conv3D + BatchNorm + non-linearity."""
-    net = tf.layers.conv3d(inputs, filters=output_channels,
-                           kernel_size=kernel_shape,
-                           strides=strides,
-                           padding=padding,
-                           use_bias=use_bias,
-                           name=name+'_conv3d')
-    if use_batch_norm:
-		net = tf.contrib.layers.batch_norm(net, is_training=is_training) 
-    if activation_fn is not None:
-        net = activation_fn(net, name=name+'_relu')
-    return net
-
+from net_utils import unit3D
 
 def SenseTime_I3D(inputs, is_training=True,
-		     final_endpoint='Prediction',
-		     data_format='NHWC',
-		     dropout_keep_prob=0.5,
-		     num_classes=101,
-		     min_depth=16,
-		     depth_multiplier=1.0,
-		     scope=None):
+				final_endpoint='Prediction',
+              	data_format='NHWC',
+              	dropout_keep_prob=0.5,
+			  	num_classes=101,
+		     	min_depth=16,
+		     	depth_multiplier=1.0,
+		     	scope=None):
 	end_points = {}
 	if depth_multiplier <= 0:
 		raise ValueError('depth_multiplier is not greater than zero.')
@@ -326,7 +303,6 @@ def SenseTime_I3D(inputs, is_training=True,
 		predictions = tf.nn.softmax(averaged_logits)
 		end_points[end_point] = predictions
 		if end_point == final_endpoint: return predictions, end_points
-
 
 if __name__ == '__main__':
 	# inputs: [batch_size, num_frames, h, w, c], outputs: [batch_size, num_classes]
