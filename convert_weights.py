@@ -7,7 +7,6 @@ import os
 import sys
 import argparse
 import tensorflow as tf
-import sonnet
 
 KINETICS_NAME_MAP = {
     'RGB/inception_i3d/': 'v/SenseTime_I3D/',
@@ -20,6 +19,21 @@ KINETICS_NAME_MAP = {
 }
 
 def rebuild_ckpoint_kinetics(checkpoint_dir, save_path):
+    """rebuild the checkpoint from kinetics-i3d model """
+    checkpoint = tf.train.get_checkpoint_state(checkpoint_dir)
+    with tf.Session() as sess:
+        for var_name, _ in tf.contrib.framework.list_variables(checkpoint_dir):
+            raw_var = tf.contrib.framework.load_variable(checkpoint_dir, var_name)
+            for k, v in KINETICS_NAME_MAP.items():
+                var_name = var_name.replace(k, v)
+            print(var_name, raw_var.shape)
+            var = tf.Variable(raw_var, name=var_name)
+
+    saver = tf.train.Saver()
+    sess.run(tf.global_variables_initializer())
+    saver.save(sess, save_path)
+
+def rebuild_ckpoint_imagenet(checkpoint_dir, save_path):
     """rebuild the checkpoint from kinetics-i3d model """
     checkpoint = tf.train.get_checkpoint_state(checkpoint_dir)
     with tf.Session() as sess:
