@@ -11,6 +11,7 @@ def unit3D(inputs, output_channels,
 				padding='same',
 				is_training=True, 
 				name=None):
+	"""Basic unit containing Conv3D + BatchNorm + non-linearity."""
 	with tf.variable_scope(name, 'unit3D', [inputs]):
 		net = tf.layers.conv3d(inputs, filters=output_channels,
 							kernel_size=kernel_shape,
