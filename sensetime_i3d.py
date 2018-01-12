@@ -14,13 +14,13 @@ import tensorflow as tf
 from net_utils import unit3D
 
 def SenseTime_I3D(inputs, is_training=True,
-				final_endpoint='Prediction',
-              	data_format='NHWC',
-              	dropout_keep_prob=0.5,
-			  	num_classes=101,
-		     	min_depth=16,
-		     	depth_multiplier=1.0,
-		     	scope=None):
+							final_endpoint='Prediction',
+							data_format='NHWC',
+              dropout_keep_prob=0.5,
+			  			num_classes=101,
+		     			min_depth=16,
+		     			depth_multiplier=1.0,
+		     			scope=None):
 	end_points = {}
 	if depth_multiplier <= 0:
 		raise ValueError('depth_multiplier is not greater than zero.')

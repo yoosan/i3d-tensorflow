@@ -4,7 +4,7 @@ import tensorflow
 
 def unit3D(inputs, output_channels,
         kernel_shape=(1, 1, 1),
-		strides=(1, 1, 1),
+		    strides=(1, 1, 1),
         activation_fn=tf.nn.relu,
         use_batch_norm=True, 
         use_bias=False,
