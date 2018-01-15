@@ -13,4 +13,4 @@ $ python convert_weights.py
 ```
 
 ## Training the I3D model on UCF101
-Now I'm preparing the code for training model on the UCF101 dataset. Using the kinetics pretrained weights, we achive a result of 94.7% top-1 accuracy on split 1 val set.
+Now I'm preparing the code for training model on the UCF101 dataset. Using the kinetics pretrained weights, we achive a result of 95.0% top-1 accuracy on split 1 with RGB modality.
