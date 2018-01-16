@@ -315,7 +315,7 @@ def SenseTime_I3D_V2(inputs, is_training=True,
 							is_training=is_training,
 							use_batch_norm=False,
 							use_bias=True,
-							name='Conv3d_0c_1x1x1')
+							name='Conv3d_1c_1x1x1')
 			logits = tf.squeeze(logits, [2, 3], name='SpatialSqueeze')
 			averaged_logits = tf.reduce_mean(logits, axis=1)
 		end_points[end_point] = averaged_logits
