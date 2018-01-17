@@ -75,10 +75,10 @@ def rebuild_ckpoint_imagenet(checkpoint_dir, save_path):
     saver.save(sess, save_path)
 
 def main():
-    # checkpoint_dir = './kinetics-i3d/data/checkpoints/rgb_imagenet/model.ckpt'
-    # rebuild_ckpoint_kinetics(checkpoint_dir, './kinetics-i3d/data/kinetics_i3d/model')
-    checkpoint_dir = './kinetics-i3d/data/2dmodel/inception_v2.ckpt'
-    rebuild_ckpoint_imagenet(checkpoint_dir, './kinetics-i3d/data/inceptionv2_i3d/model')
+    checkpoint_dir = './kinetics-i3d/data/checkpoints/rgb_imagenet/model.ckpt'
+    rebuild_ckpoint_kinetics(checkpoint_dir, './kinetics-i3d/data/kinetics_i3d/model')
+    # checkpoint_dir = './kinetics-i3d/data/2dmodel/inception_v2.ckpt'
+    # rebuild_ckpoint_imagenet(checkpoint_dir, './kinetics-i3d/data/inceptionv2_i3d/model')
 
 if __name__ == '__main__':
     main()

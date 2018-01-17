@@ -8,7 +8,28 @@ from __future__ import division
 from __future__ import print_function
 
 import tensorflow as tf
-from net_utils import unit3D
+
+def unit3D(inputs, output_channels,
+           kernel_shape=(1, 1, 1),
+           strides=(1, 1, 1),
+           activation_fn=tf.nn.relu,
+           use_batch_norm=True,
+           use_bias=False,
+           padding='same',
+           is_training=True,
+           name=None):
+    """Basic unit containing Conv3D + BatchNorm + non-linearity."""
+    with tf.variable_scope(name, 'unit3D', [inputs]):
+        net = tf.layers.conv3d(inputs, filters=output_channels,
+                            kernel_size=kernel_shape,
+                            strides=strides,
+                            padding=padding,
+                            use_bias=use_bias)
+        if use_batch_norm:
+            net = tf.contrib.layers.batch_norm(net, is_training=is_training)
+        if activation_fn is not None:
+            net = activation_fn(net)
+    return net
 
 def SenseTime_I3D_V2(inputs, is_training=True,
                      final_endpoint='Prediction',
@@ -25,7 +46,7 @@ def SenseTime_I3D_V2(inputs, is_training=True,
 
 	concat_axis = 2 if data_format == 'NCHW' else -1
 	with tf.variable_scope(scope, 'SenseTime_I3D_V2', [inputs]):
-		end_point = 'Conv3d_1a_7x7X7'
+		end_point = 'Conv3d_1a_7x7x7'
 		net = unit3D(inputs, depth(64), [7,7,7], 2, is_training=is_training, name=end_point)
 		end_points[end_point] = net
 		if end_point == final_endpoint: return net, end_points
@@ -167,7 +188,7 @@ def SenseTime_I3D_V2(inputs, is_training=True,
                                       		strides=[1, 1, 1, 1, 1], padding='SAME',
                                       		name='MaxPool3d_0a_3x3x3')
 				branch_3 = unit3D(branch_3, depth(128), [1, 1, 1],
-								  is_training=is_training, name='Conv2d_0b_1x1')
+								  is_training=is_training, name='Conv2d_0b_1x1x1')
 			net = tf.concat(axis=concat_axis, values=[branch_0, branch_1, branch_2, branch_3])
 		end_points[end_point] = net
 		if end_point == final_endpoint: return net, end_points

@@ -28,7 +28,7 @@ def SenseTime_I3D(inputs, is_training=True,
 
 	concat_axis = 2 if data_format == 'NCHW' else -1
 	with tf.variable_scope(scope, 'SenseTime_I3D', [inputs]):
-		end_point = 'Conv3d_1a_7x7X7'
+		end_point = 'Conv3d_1a_7x7x7'
 		net = unit3D(inputs, depth(64), [7,7,7], 2, is_training=is_training, name=end_point)
 		end_points[end_point] = net
 		if end_point == final_endpoint: return net, end_points
@@ -277,7 +277,7 @@ def SenseTime_I3D(inputs, is_training=True,
 											strides=[1, 1, 1, 1, 1], padding='SAME',
 											name='MaxPool3d_0a_3x3x3')
 				branch_3 = unit3D(branch_3, depth(128), kernel_shape=[1, 1, 1],
-								  is_training=is_training, name='Conv3d_0b_1x1')
+								  is_training=is_training, name='Conv3d_0b_1x1x1')
 			net = tf.concat([branch_0, branch_1, branch_2, branch_3], concat_axis)
 		end_points[end_point] = net
 		if end_point == final_endpoint: return net, end_points
