@@ -1,23 +1,24 @@
-"""Inception-v2 Inflated 3D ConvNet architecture, the Inception-v2 
-network is introduced at TensorFlow slim library, see 
+"""Inception-v2 Inflated 3D ConvNet architecture, the Inception-v2
+network is introduced at TensorFlow slim library, see
 https://github.com/tensorflow/models/blob/master/research/slim/nets/inception_v2.py,
-also see paper http://arxiv.org/abs/1502.03167. 
+also refer to the paper http://arxiv.org/abs/1502.03167.
 """
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
 import tensorflow as tf
-from net_utils import unit3D
+from snets.net_utils import unit3D
 
-def SenseTime_I3D_V2(inputs, is_training=True,
-                     final_endpoint='Prediction',
-				     data_format='NHWC',
-				     dropout_keep_prob=0.5,
-				     num_classes=101,
-				     min_depth=16,
-                     depth_multiplier=1.0,
-				     scope=None):
+def SenseTime_I3D_V2(inputs,
+					 num_classes=101,
+					 is_training=True,
+					 final_endpoint='Prediction',
+					 data_format='NHWC',
+					 dropout_keep_prob=0.5,
+					 min_depth=16,
+					 depth_multiplier=1.0,
+					 scope=None):
 	end_points = {}
 	if depth_multiplier <= 0:
 		raise ValueError('depth_multiplier is not greater than zero.')
@@ -55,20 +56,20 @@ def SenseTime_I3D_V2(inputs, is_training=True,
 						    is_training=is_training, name='Conv3d_0a_1x1x1')
 				branch_1 = unit3D(branch_1, depth(64), kernel_shape=[3, 3, 3],
 						    is_training=is_training, name='Conv3d_0b_3x3x3')
-			with tf.variable_scope('Branch_2'): 
-				branch_2 = unit3D(net, depth(64), kernel_shape=[1, 1, 1], 
+			with tf.variable_scope('Branch_2'):
+				branch_2 = unit3D(net, depth(64), kernel_shape=[1, 1, 1],
 								  is_training=is_training, name='Conv3d_0a_1x1x1')
-				branch_2 = unit3D(branch_2, depth(96), kernel_shape=[3, 3, 3], 
+				branch_2 = unit3D(branch_2, depth(96), kernel_shape=[3, 3, 3],
 								  is_training=is_training, name='Conv3d_0b_3x3x3')
-				branch_2 = unit3D(branch_2, depth(96), kernel_shape=[3, 3, 3], 
+				branch_2 = unit3D(branch_2, depth(96), kernel_shape=[3, 3, 3],
 								  is_training=is_training, name='Conv3d_0c_3x3x3')
 			with tf.variable_scope('Branch_3'):
-				branch_3 = tf.nn.max_pool3d(net, [1, 3, 3, 3, 1], strides=[1, 1, 1, 1, 1], 
+				branch_3 = tf.nn.max_pool3d(net, [1, 3, 3, 3, 1], strides=[1, 1, 1, 1, 1],
 											padding='SAME', name='MaxPool3d_0a_3x3x3')
-				branch_3 = unit3D(branch_3, depth(32), kernel_shape=[1, 1, 1], 
+				branch_3 = unit3D(branch_3, depth(32), kernel_shape=[1, 1, 1],
 								  is_training=is_training, name='Conv3d_0b_1x1x1')
 			net = tf.concat([branch_0, branch_1, branch_2, branch_3], concat_axis)
-		
+
 		end_points[end_point] = net
 		if end_point == final_endpoint: return net, end_points
 		end_point = 'Mixed_3c'
@@ -86,7 +87,7 @@ def SenseTime_I3D_V2(inputs, is_training=True,
 								  is_training=is_training, name='Conv3d_0a_1x1x1')
 				branch_2 = unit3D(branch_2, depth(96), kernel_shape=[3, 3, 3],
 								  is_training=is_training, name='Conv3d_0b_3x3x3')
-				branch_2 = unit3D(branch_2, depth(96), kernel_shape=[3, 3, 3], 
+				branch_2 = unit3D(branch_2, depth(96), kernel_shape=[3, 3, 3],
 								  is_training=is_training, name='Conv3d_0c_3x3x3')
 			with tf.variable_scope('Branch_3'):
 				branch_3 = tf.nn.max_pool3d(net, ksize=[1, 3, 3, 3, 1],
@@ -97,7 +98,7 @@ def SenseTime_I3D_V2(inputs, is_training=True,
 		net = tf.concat([branch_0, branch_1, branch_2, branch_3], concat_axis)
 		end_points[end_point] = net
 		if end_point == final_endpoint: return net, end_points
-		
+
 		end_point = 'Mixed_4a'
 		with tf.variable_scope(end_point):
 			with tf.variable_scope('Branch_0'):
@@ -137,7 +138,7 @@ def SenseTime_I3D_V2(inputs, is_training=True,
 				branch_2 = unit3D(branch_2, depth(128), kernel_shape=[3, 3, 3],
 								  is_training=is_training, name='Conv2d_0c_3x3x3')
 			with tf.variable_scope('Branch_3'):
-				branch_3 = tf.nn.max_pool3d(net, ksize=[1, 3, 3, 3, 1], 
+				branch_3 = tf.nn.max_pool3d(net, ksize=[1, 3, 3, 3, 1],
 											strides=[1, 1, 1, 1, 1], padding='SAME',
                                       		name='MaxPool3d_0a_3x3x3')
 				branch_3 = unit3D(branch_3, depth(128), kernel_shape=[1, 1, 1],
@@ -176,7 +177,7 @@ def SenseTime_I3D_V2(inputs, is_training=True,
 		end_point = 'Mixed_4d'
 		with tf.variable_scope(end_point):
 			with tf.variable_scope('Branch_0'):
-				branch_0 = unit3D(net, depth(160), [1, 1, 1], 
+				branch_0 = unit3D(net, depth(160), [1, 1, 1],
 								  is_training=is_training, name='Conv2d_0a_1x1x1')
 			with tf.variable_scope('Branch_1'):
 				branch_1 = unit3D(net, depth(128), [1, 1, 1],
@@ -198,22 +199,22 @@ def SenseTime_I3D_V2(inputs, is_training=True,
 								  is_training=is_training, name='Conv2d_0b_1x1x1')
 			net = tf.concat(axis=concat_axis, values=[branch_0, branch_1, branch_2, branch_3])
 		end_points[end_point] = net
-		if end_point == final_endpoint: return net, end_points	
+		if end_point == final_endpoint: return net, end_points
 		# 14 x 14 x 576
 		end_point = 'Mixed_4e'
 		with tf.variable_scope(end_point):
 			with tf.variable_scope('Branch_0'):
-				branch_0 = unit3D(net, depth(96), [1, 1, 1], 
+				branch_0 = unit3D(net, depth(96), [1, 1, 1],
 								  is_training=is_training, name='Conv2d_0a_1x1x1')
 			with tf.variable_scope('Branch_1'):
 				branch_1 = unit3D(net, depth(128), [1, 1, 1],
 								  is_training=is_training, name='Conv2d_0a_1x1x1')
-				branch_1 = unit3D(branch_1, depth(192), [3, 3, 3], 
+				branch_1 = unit3D(branch_1, depth(192), [3, 3, 3],
 								  is_training=is_training, name='Conv2d_0b_3x3x3')
 			with tf.variable_scope('Branch_2'):
-				branch_2 = unit3D(net, depth(160), [1, 1, 1], 
+				branch_2 = unit3D(net, depth(160), [1, 1, 1],
 								  is_training=is_training, name='Conv2d_0a_1x1x1')
-				branch_2 = unit3D(branch_2, depth(192), [3, 3, 3], 
+				branch_2 = unit3D(branch_2, depth(192), [3, 3, 3],
 								  is_training=is_training, name='Conv2d_0b_3x3x3')
 				branch_2 = unit3D(branch_2, depth(192), [3, 3, 3],
 								  is_training=is_training, name='Conv2d_0c_3x3x3')
@@ -252,7 +253,7 @@ def SenseTime_I3D_V2(inputs, is_training=True,
 		end_point = 'Mixed_5b'
 		with tf.variable_scope(end_point):
 			with tf.variable_scope('Branch_0'):
-				branch_0 = unit3D(net, depth(352), [1, 1, 1], 
+				branch_0 = unit3D(net, depth(352), [1, 1, 1],
 								  is_training=is_training, name='Conv2d_0a_1x1x1')
 			with tf.variable_scope('Branch_1'):
 				branch_1 = unit3D(net, depth(192), [1, 1, 1],
@@ -275,11 +276,11 @@ def SenseTime_I3D_V2(inputs, is_training=True,
 			net = tf.concat(axis=concat_axis, values=[branch_0, branch_1, branch_2, branch_3])
 		end_points[end_point] = net
 		if end_point == final_endpoint: return net, end_points
-		
+
 		end_point = 'Mixed_5c'
 		with tf.variable_scope(end_point):
 			with tf.variable_scope('Branch_0'):
-				branch_0 = unit3D(net, depth(352), [1, 1, 1], 
+				branch_0 = unit3D(net, depth(352), [1, 1, 1],
 								  is_training=is_training, name='Conv2d_0a_1x1x1')
 			with tf.variable_scope('Branch_1'):
 				branch_1 = unit3D(net, depth(192), [1, 1, 1],
