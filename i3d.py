@@ -13,22 +13,22 @@ from __future__ import print_function
 import tensorflow as tf
 from snets.net_utils import unit3D
 
-def SenseTime_I3D(inputs,
-                  num_classes=101,
-                  is_training=True,
-                  final_endpoint='Predictions',
-                  data_format='NHWC',
-                  dropout_keep_prob=0.5,
-                  min_depth=16,
-                  depth_multiplier=1.0,
-                  scope=None):
+def I3D(inputs,
+        num_classes=101,
+        is_training=True,
+        final_endpoint='Predictions',
+        data_format='NHWC',
+        dropout_keep_prob=0.5,
+        min_depth=16,
+        depth_multiplier=1.0,
+        scope=None):
 	end_points = {}
 	if depth_multiplier <= 0:
 		raise ValueError('depth_multiplier is not greater than zero.')
 	depth = lambda d: max(int(d * depth_multiplier), min_depth)
 
 	concat_axis = 2 if data_format == 'NCHW' else -1
-	with tf.variable_scope(scope, 'SenseTime_I3D', [inputs]):
+	with tf.variable_scope(scope, 'I3D', [inputs]):
 		end_point = 'Conv3d_1a_7x7x7'
 		net = unit3D(inputs, depth(64), [7,7,7], 2, is_training=is_training, name=end_point)
 		end_points[end_point] = net
@@ -309,5 +309,5 @@ def SenseTime_I3D(inputs,
 if __name__ == '__main__':
 	# inputs: [batch_size, num_frames, h, w, c], outputs: [batch_size, num_classes]
 	inps = tf.placeholder(dtype=tf.float32, shape=[4, 64, 224, 224, 3])
-	si3d, _ = SenseTime_I3D(inps, final_endpoint='Logits')
+	si3d, _ = I3D(inps, final_endpoint='Logits')
 	print(si3d)

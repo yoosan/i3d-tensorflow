@@ -4,19 +4,15 @@ from __future__ import print_function
 import functools
 
 import tensorflow as tf
-from snets import sensetime_i3d
-from snets import sensetime_r3d
-from snets import sensetime_i3d_v2
-from snets import sensetime_s3d
+import i3d, i3d_v2, r3d
 
 FLAGS = tf.flags.FLAGS
 
-networks_map = {'i3d_v1': sensetime_i3d.SenseTime_I3D,
-                'i3d_v2': sensetime_i3d_v2.SenseTime_I3D_V2,
-                's3d_v1': sensetime_s3d.SenseTime_S3D,
-                'r3d_50': sensetime_r3d.resnet_v1_50,
-                'r3d_101': sensetime_r3d.resnet_v1_101,
-                'r3d_152': sensetime_r3d.resnet_v1_152
+networks_map = {'i3d_v1': i3d.I3D,
+                'i3d_v2': i3d_v2.I3D_V2,
+                'r3d_50': r3d.resnet_v1_50,
+                'r3d_101': r3d.resnet_v1_101,
+                'r3d_152': r3d.resnet_v1_152
                }
 
 def get_network_fn(name, num_classes, weight_decay=0.0, is_training=False, data_format='NHWC'):
